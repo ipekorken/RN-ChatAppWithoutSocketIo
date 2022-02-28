@@ -1,2 +1,3 @@
-//import ExampleScreen from './ExampleScreen';
-//export { ExampleScreen };
+import Chat from './Chat';
+import Home from './Home';
+export {Home, Chat};

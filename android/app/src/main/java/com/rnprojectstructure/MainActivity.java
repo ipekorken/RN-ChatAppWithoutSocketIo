@@ -11,7 +11,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "RNProjectStructure";
+    return "twilioProject";
   }
   @Override
   protected void onCreate(Bundle savedInstanceState) {
