@@ -1,7 +1,18 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Home, Chat} from '../screens';
+import {
+  Home,
+  Chat,
+  Forgot,
+  Register,
+  Login,
+  Video,
+  Conversation,
+  ChatMainScreen,
+  CreateRoom,
+  CreateGroup,
+} from '../screens';
 
 const Stack = createNativeStackNavigator();
 
@@ -10,6 +21,41 @@ const Navigation = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Forgot"
+          component={Forgot}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ChatMainScreen"
+          component={ChatMainScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Conversation"
+          component={Conversation}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="CreateRoom"
+          component={CreateRoom}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="CreateGroup"
+          component={CreateGroup}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
           name="Home"
           component={Home}
           options={{headerShown: false}}
@@ -17,6 +63,11 @@ const Navigation = () => {
         <Stack.Screen
           name="Chat"
           component={Chat}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Video"
+          component={Video}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

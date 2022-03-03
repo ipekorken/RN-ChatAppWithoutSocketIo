@@ -4,7 +4,11 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 platform :ios, '11.0'
 
 target 'twilioProject' do
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+  pod 'react-native-twilio-video-webrtc', path: '../node_modules/react-native-twilio-video-webrtc'
   config = use_native_modules!
+  
 
   use_react_native!(
     :path => config[:reactNativePath],

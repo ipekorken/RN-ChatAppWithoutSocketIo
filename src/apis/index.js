@@ -1,2 +1,2 @@
-//import {apiUrl} from './apiUrl';
-//export {apiUrl};
+import {apiUrl} from './apiUrl';
+export {apiUrl};
