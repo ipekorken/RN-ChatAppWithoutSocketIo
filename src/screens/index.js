@@ -6,8 +6,8 @@ import Forgot from './Forgot';
 import Video from './Video';
 import Conversation from './Conversation';
 import ChatMainScreen from './ChatMainScreen';
-import CreateGroup from './CreateGroup';
-import CreateRoom from './CreateRoom';
+import CreateGroupChat from './CreateGroupChat';
+import CreateChat from './CreateChat';
 
 export {
   Home,
@@ -18,6 +18,6 @@ export {
   Video,
   Conversation,
   ChatMainScreen,
-  CreateGroup,
-  CreateRoom,
+  CreateGroupChat,
+  CreateChat,
 };

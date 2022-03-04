@@ -12,12 +12,19 @@ import {
   Image,
 } from 'react-native';
 import axios from 'axios';
+//import {useDispatch, useSelector} from 'react-redux';
+//import {setSelectedUsers} from '../@redux/app/actions';
 import {apiUrl} from '../apis';
-import CheckIcon from '../assets/icons';
+import {GreenCheck, GreyCheck} from '../components';
 
 const CreateGroup = ({navigation}) => {
+  //const dispatch = useDispatch();
+  //const selectedUsers = useSelector(state => state.app.selectedUsers);
   const [name, setName] = useState('');
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [addButtonView, setAddButtonView] = useState([]);
+  const [selectedState, setSelectedState] = useState([]);
+  const [userId, setUserId] = useState('');
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -100,22 +107,76 @@ const CreateGroup = ({navigation}) => {
     navigation.navigate('ChatMainScreen');
   }
 
-  const renderUsers = itemData => {
+  function saveSelectedUser(id) {
+    console.log(selectedUsers);
+    if (!selectedUsers.includes(id)) {
+      selectedUsers.push(id);
+      console.log('ekleme', selectedUsers);
+    } else {
+      for (var i = 0; i < selectedUsers.length; i++) {
+        if (selectedUsers[i] === id) {
+          selectedUsers.splice(i, 1);
+          console.log('çıkarma', selectedUsers);
+        }
+      }
+    }
+    console.log(selectedUsers);
+  }
+
+  // useEffect(userId => {
+  //   const selectedList = [];
+  //   setAddButtonView([]);
+  //   if (!selectedUsers.includes(userId)) {
+  //     selectedList.push(userId);
+  //   }
+  //   setAddButtonView(selectedList);
+  // }, []);
+
+  // const changeAddButton = button => {
+  //   if (addButtonView.includes(button)) {
+  //     //çıkarma
+  //     //setAddButtonView([]);
+  //     let array = addButtonView;
+  //     for (var i = 0; i < array.length; i++) {
+  //       if (array[i] === button) {
+  //         array.pop(i);
+  //       }
+  //     }
+  //     setAddButtonView(array);
+  //   } else {
+  //     //ekleme
+  //     const buttons = [...addButtonView, button];
+  //     setAddButtonView(buttons);
+  //   }
+  // };
+
+  useEffect(() => {
+    const a = [];
+    for (var i = 0; i < users.length; i++) {
+      a.push(false);
+    }
+    setSelectedState(a);
+  }, []);
+
+  const renderUsers = ({item}) => {
     return (
       <View style={styles.renderUserScreen}>
         <View style={styles.userImgView}>
-          <Image style={styles.userImg} source={itemData.item.img} />
+          <Image style={styles.userImg} source={item.img} />
         </View>
         <View style={styles.userNameView}>
-          <Text style={styles.userNameTxt}>{itemData.item.userName}</Text>
+          <Text style={styles.userNameTxt}>{item.userName}</Text>
         </View>
-        <View style={styles.boxContainer}>
-          <TouchableOpacity>
-            <View style={styles.boxView}>
-              <CheckIcon style={styles.checkIcon} />
-            </View>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={() => {
+            //saveSelectedUser(item.id);
+            console.log(users.indexOf(item));
+            //changeAddButton(item.id);
+            //setUserId(item.id);
+          }}>
+          <Text>dsads</Text>
+          {/* {!addButtonView.includes(item.id) ? <GreyCheck /> : <GreenCheck />} */}
+        </TouchableOpacity>
       </View>
     );
   };
@@ -198,11 +259,23 @@ const styles = StyleSheet.create({
   userImg: {},
   userNameView: {
     marginLeft: 10,
+    width: 240,
+    height: 50,
+    justifyContent: 'center',
   },
   userNameTxt: {},
-  boxContainer: {
-    justifyContent: 'flex-end',
+  checkBoxTouch: {
+    borderWidth: 2,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
   },
-  boxView: {},
-  checkIcon: {},
+  checkBoxView: {
+    width: 20,
+    height: 20,
+    backgroundColor: '#ECECEC',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
 });

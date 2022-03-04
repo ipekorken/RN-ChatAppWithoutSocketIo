@@ -1,4 +1,9 @@
-import {SET_USERTOKEN, SET_USERINFO, SET_USERS} from './types';
+import {
+  SET_USERTOKEN,
+  SET_USERINFO,
+  SET_USERS,
+  SET_SELECTEDUSERS,
+} from './types';
 
 export const setUserToken = userToken => ({
   type: SET_USERTOKEN,
@@ -11,4 +16,8 @@ export const setUserInfo = userInfo => ({
 export const setUsers = users => ({
   type: SET_USERS,
   payload: users,
+});
+export const setSelectedUsers = selectedUsers => ({
+  type: SET_SELECTEDUSERS,
+  payload: selectedUsers,
 });

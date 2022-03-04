@@ -44,11 +44,11 @@ const ChatMainScreen = ({navigation}) => {
     },
   ]);
 
-  function createRoom() {
-    navigation.navigate('CreateRoom');
+  function createChat() {
+    navigation.navigate('CreateChat');
   }
-  function createGroup() {
-    navigation.navigate('CreateGroup');
+  function createGroupChat() {
+    navigation.navigate('CreateGroupChat');
   }
 
   return (
@@ -69,12 +69,12 @@ const ChatMainScreen = ({navigation}) => {
         </ScrollView>
       </View>
       <View style={styles.btnContainer}>
-        <TouchableOpacity onPress={createRoom}>
+        <TouchableOpacity onPress={createChat}>
           <View style={styles.btnView}>
-            <Text style={styles.btnTxt}>Create Room</Text>
+            <Text style={styles.btnTxt}>Create Chat</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={createGroup}>
+        <TouchableOpacity onPress={createGroupChat}>
           <View style={styles.btnView}>
             <Text style={styles.btnTxt}>Create Group</Text>
           </View>

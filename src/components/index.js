@@ -1,2 +1,4 @@
-// import ExampleButton from './ExampleButton';
-//export { ExampleButton };
+import GreenCheck from './GreenCheck';
+import GreyCheck from './greyCheck';
+
+export {GreyCheck, GreenCheck};

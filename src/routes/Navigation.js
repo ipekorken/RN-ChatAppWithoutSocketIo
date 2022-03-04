@@ -10,8 +10,8 @@ import {
   Video,
   Conversation,
   ChatMainScreen,
-  CreateRoom,
-  CreateGroup,
+  CreateChat,
+  CreateGroupChat,
 } from '../screens';
 
 const Stack = createNativeStackNavigator();
@@ -46,13 +46,13 @@ const Navigation = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="CreateRoom"
-          component={CreateRoom}
+          name="CreateChat"
+          component={CreateChat}
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="CreateGroup"
-          component={CreateGroup}
+          name="CreateGroupChat"
+          component={CreateGroupChat}
           options={{headerShown: false}}
         />
         <Stack.Screen
