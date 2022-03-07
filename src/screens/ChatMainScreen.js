@@ -9,40 +9,39 @@ import {
   StatusBar,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {setGroups} from '../@redux/app/actions';
+import axios from 'axios';
+import {apiUrl} from '../apis';
 
 const ChatMainScreen = ({navigation}) => {
-  const [conversations, setConversations] = useState([
-    {
-      id: 1,
-      img: require('../assets/images/orangeCircle.png'),
-      conversationName: 'conversationName1',
-    },
-    {
-      id: 2,
-      img: require('../assets/images/greyCircle.png'),
-      conversationName: 'conversationName2',
-    },
-    {
-      id: 3,
-      img: require('../assets/images/greenCircle.png'),
-      conversationName: 'conversationName3',
-    },
-    {
-      id: 4,
-      img: require('../assets/images/orangeCircle.png'),
-      conversationName: 'conversationName4',
-    },
-    {
-      id: 5,
-      img: require('../assets/images/greyCircle.png'),
-      conversationName: 'conversationName5',
-    },
-    {
-      id: 6,
-      img: require('../assets/images/greenCircle.png'),
-      conversationName: 'conversationName6',
-    },
-  ]);
+  const dispatch = useDispatch();
+  const userToken = useSelector(state => state.app.userToken);
+  const groups = useSelector(state => state.app.groups);
+  console.log('groups: ', groups);
+
+  function getGroupList() {
+    var config = {
+      method: 'get',
+      url: `${apiUrl}:3000/api/groups`,
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        dispatch(setGroups(response.data.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+  useEffect(() => {
+    getGroupList();
+  }, []);
 
   function createChat() {
     navigation.navigate('CreateChat');
@@ -56,13 +55,13 @@ const ChatMainScreen = ({navigation}) => {
       <StatusBar backgroundColor={'lightblue'} />
       <View style={styles.chatContainer}>
         <ScrollView>
-          {conversations.map((item, index) => (
+          {groups?.map((item, index) => (
             <View key={index} style={styles.chatSubContainer}>
               <View style={styles.imgView}>
-                <Image source={item.img} />
+                <Image source={require('../assets/images/orangeCircle.png')} />
               </View>
               <View style={styles.msgView}>
-                <Text style={styles.msgTxt}>{item.conversationName}</Text>
+                <Text style={styles.msgTxt}>{item.groupName}</Text>
               </View>
             </View>
           ))}

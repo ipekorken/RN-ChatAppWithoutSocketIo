@@ -3,6 +3,7 @@ import {
   SET_USERINFO,
   SET_USERS,
   SET_SELECTEDUSERS,
+  SET_GROUPS,
 } from './types';
 
 const initialState = {
@@ -10,6 +11,7 @@ const initialState = {
   userInfo: null,
   users: [],
   selectedUsers: [],
+  groups: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -28,6 +30,8 @@ const reducer = (state = initialState, action) => {
     case SET_SELECTEDUSERS:
       return {...state, selectedUsers: action.payload};
       break;
+    case SET_GROUPS:
+      return {...state, groups: action.payload};
     default:
       break;
   }
