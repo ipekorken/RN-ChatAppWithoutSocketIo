@@ -4,6 +4,7 @@ import {
   SET_USERS,
   SET_SELECTEDUSERS,
   SET_GROUPS,
+  SET_MESSAGES,
 } from './types';
 
 export const setUserToken = userToken => ({
@@ -25,4 +26,8 @@ export const setSelectedUsers = selectedUsers => ({
 export const setGroups = groups => ({
   type: SET_GROUPS,
   payload: groups,
+});
+export const setMessages = messages => ({
+  type: SET_MESSAGES,
+  payload: messages,
 });

@@ -3,3 +3,4 @@ export const SET_USERINFO = 'SET_USERINFO';
 export const SET_USERS = 'SET_USERS';
 export const SET_SELECTEDUSERS = 'SET_SELECTEDUSERS';
 export const SET_GROUPS = 'SET_GROUPS';
+export const SET_MESSAGES = 'SET_MESSAGES';

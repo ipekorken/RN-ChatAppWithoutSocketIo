@@ -17,6 +17,7 @@ import {apiUrl} from '../apis';
 const ChatMainScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const userToken = useSelector(state => state.app.userToken);
+  const userInfo = useSelector(state => state.app.userInfo);
   const groups = useSelector(state => state.app.groups);
 
   function getGroupList() {
@@ -31,7 +32,7 @@ const ChatMainScreen = ({navigation}) => {
 
     axios(config)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
+        //console.log(JSON.stringify(response.data));
         dispatch(setGroups(response.data.data));
       })
       .catch(function (error) {
@@ -48,6 +49,11 @@ const ChatMainScreen = ({navigation}) => {
   function createGroupChat() {
     navigation.navigate('CreateGroupChat');
   }
+  function goConversation(id) {
+    navigation.navigate('Conversation', {
+      groupId: id,
+    });
+  }
 
   return (
     <View style={styles.screen}>
@@ -55,13 +61,25 @@ const ChatMainScreen = ({navigation}) => {
       <View style={styles.chatContainer}>
         <ScrollView>
           {groups?.map((item, index) => (
-            <View key={index} style={styles.chatSubContainer}>
-              <View style={styles.imgView}>
-                <Image source={require('../assets/images/orangeCircle.png')} />
-              </View>
-              <View style={styles.msgView}>
-                <Text style={styles.msgTxt}>{item.name}</Text>
-              </View>
+            <View key={index}>
+              {item.members.includes(userInfo._id) ? (
+                <View style={styles.chatSubContainer}>
+                  <View style={styles.imgView}>
+                    <Image
+                      source={require('../assets/images/orangeCircle.png')}
+                    />
+                  </View>
+                  <TouchableOpacity
+                    style={styles.msgView}
+                    onPress={() => goConversation(item._id)}>
+                    <View>
+                      <Text style={styles.msgTxt}>{item.name}</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <></>
+              )}
             </View>
           ))}
         </ScrollView>
@@ -73,7 +91,7 @@ const ChatMainScreen = ({navigation}) => {
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={createGroupChat}>
-          <View style={styles.btnView}>
+          <View style={[styles.btnView, {marginTop: 10}]}>
             <Text style={styles.btnTxt}>Create Group</Text>
           </View>
         </TouchableOpacity>
@@ -100,7 +118,7 @@ const styles = StyleSheet.create({
   },
   imgView: {},
   msgView: {
-    width: '50%',
+    width: '35%',
     backgroundColor: 'lightblue',
     borderRadius: 10,
     padding: 10,
@@ -114,8 +132,12 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     position: 'absolute',
-    marginLeft: 275,
+    marginLeft: 230,
     marginTop: 22,
+    width: 150,
+    height: 150,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   btnView: {
     backgroundColor: 'lightblue',
@@ -124,10 +146,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 10,
     borderWidth: 1,
     borderColor: 'lightgrey',
-    marginTop: 5,
   },
   btnTxt: {
     color: 'white',

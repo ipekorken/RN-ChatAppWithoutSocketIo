@@ -20,6 +20,7 @@ import {GreenCheck, GreyCheck} from '../components';
 const CreateGroup = ({navigation}) => {
   const dispatch = useDispatch();
   const userToken = useSelector(state => state.app.userToken);
+  const userInfo = useSelector(state => state.app.userInfo);
   const selectedUsers = useSelector(state => state.app.selectedUsers);
   const users = useSelector(state => state.app.users);
   const [selectList, setSelectList] = useState([]);
@@ -61,8 +62,7 @@ const CreateGroup = ({navigation}) => {
 
       axios(config)
         .then(function (response) {
-          console.log(JSON.stringify(response.data));
-
+          //console.log(JSON.stringify(response.data));
           var config = {
             method: 'get',
             url: `${apiUrl}:3000/api/groups`,
@@ -71,7 +71,6 @@ const CreateGroup = ({navigation}) => {
               'Content-Type': 'application/json',
             },
           };
-
           axios(config)
             .then(function (response) {
               console.log(JSON.stringify(response.data));
@@ -80,7 +79,6 @@ const CreateGroup = ({navigation}) => {
             .catch(function (error) {
               console.log(error);
             });
-
           setTimeout(() => {
             dispatch(setSelectedUsers([]));
             navigation.navigate('ChatMainScreen');
@@ -101,6 +99,7 @@ const CreateGroup = ({navigation}) => {
   const addUserToGroup = id => {
     getUserList();
     if (!selectedUsers.includes(id)) {
+      selectList.push(userInfo._id);
       selectList.push(id);
       dispatch(setSelectedUsers(selectList));
     } else {
@@ -139,7 +138,7 @@ const CreateGroup = ({navigation}) => {
   }, []);
 
   const renderUsers = ({item}) => {
-    return (
+    return item.name !== userInfo.name ? (
       <View style={styles.renderUserScreen}>
         <View style={styles.userImgView}>
           <Image
@@ -160,6 +159,8 @@ const CreateGroup = ({navigation}) => {
           {!selectedUsers.includes(item._id) ? <GreyCheck /> : <GreenCheck />}
         </TouchableOpacity>
       </View>
+    ) : (
+      <></>
     );
   };
 
@@ -204,8 +205,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   inputContainer: {
-    padding: 20,
-    margin: 20,
+    padding: 10,
+    margin: 10,
     justifyContent: 'center',
   },
   inputView: {

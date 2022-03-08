@@ -7,138 +7,165 @@ import {
   TouchableOpacity,
   View,
   StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import axios from 'axios';
+import {useSelector, useDispatch} from 'react-redux';
+import {setUsers, setMessages} from '../@redux/app/actions';
+import {apiUrl} from '../apis';
 
-const Conversation = () => {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      msg: 'msg1',
-      img: require('../assets/images/orangeCircle.png'),
-      userName: 'user1',
-    },
-    {
-      id: 2,
-      msg: 'msg2',
-      img: require('../assets/images/greyCircle.png'),
-      userName: 'user2',
-    },
-    {
-      id: 3,
-      msg: 'msg3msg3msg3msg3msg3msg3msg3msg3msg3msg3msg3msg3msg3msg3msg3msg3msg3msg3msg3msg3msg3',
-      img: require('../assets/images/greenCircle.png'),
-      userName: 'user3',
-    },
-    {
-      id: 4,
-      msg: 'msg4',
-      img: require('../assets/images/orangeCircle.png'),
-      userName: 'user4',
-    },
-    {
-      id: 5,
-      msg: 'msg5',
-      img: require('../assets/images/greyCircle.png'),
-      userName: 'user5',
-    },
-    {
-      id: 6,
-      msg: 'msg6msg6msg6msg6',
-      img: require('../assets/images/greenCircle.png'),
-      userName: 'user6',
-    },
-    {
-      id: 7,
-      msg: 'msg7',
-      img: require('../assets/images/orangeCircle.png'),
-      userName: 'user7',
-    },
-    {
-      id: 8,
-      msg: 'msg8',
-      img: require('../assets/images/greyCircle.png'),
-      userName: 'user8',
-    },
-    {
-      id: 9,
-      msg: 'msg9msg9msg9msg9',
-      img: require('../assets/images/greenCircle.png'),
-      userName: 'user9',
-    },
-  ]);
+const Conversation = ({navigation, route}) => {
+  const {groupId} = route.params;
+  const dispatch = useDispatch();
+  const userToken = useSelector(state => state.app.userToken);
+  const userInfo = useSelector(state => state.app.userInfo);
+  const users = useSelector(state => state.app.users);
+  const messages = useSelector(state => state.app.messages);
   const [inputMsg, setInputMsg] = useState('');
 
   function sendMsg() {
-    setInputMsg('');
-    console.log('send msg');
+    if (inputMsg !== '') {
+      var data = JSON.stringify({
+        groupId: groupId,
+        userId: userInfo._id,
+        message: inputMsg,
+      });
+
+      var config = {
+        method: 'post',
+        url: `${apiUrl}:3000/api/messages/sendMessage`,
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        },
+        data: data,
+      };
+      axios(config)
+        .then(function (response) {
+          //console.log(JSON.stringify(response.data));
+          setInputMsg('');
+          getMessageList();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      showAlert('Mesaj gönderilemedi', 'Please fill the blanks!');
+    }
   }
 
-  const colors = [
-    '#FF6633',
-    '#FFB399',
-    '#FF33FF',
-    '#FFFF99',
-    '#00B3E6',
-    '#E6B333',
-    '#3366E6',
-    '#999966',
-    '#99FF99',
-    '#B34D4D',
-    '#80B300',
-    '#809900',
-    '#E6B3B3',
-  ];
+  function getUserList() {
+    var config = {
+      method: 'get',
+      url: `${apiUrl}:3000/api/users`,
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        //console.log(JSON.stringify(response.data));
+        dispatch(setUsers(response.data.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+  function getMessageList() {
+    var config = {
+      method: 'get',
+      url: `${apiUrl}:3000/api/messages`,
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        //console.log(JSON.stringify(response.data));
+        dispatch(setMessages(response.data.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  useEffect(() => {
+    getUserList();
+    getMessageList();
+  }, []);
 
   return (
-    <>
-      <KeyboardAwareScrollView>
-        <StatusBar backgroundColor={'lightblue'} />
-        <View style={styles.screen}>
-          <View style={styles.chatContainer}>
-            <ScrollView>
-              {messages.map((item, index) => (
-                <View key={index} style={styles.chatSubContainer}>
-                  <View style={styles.imgView}>
-                    <Image source={item.img} />
-                  </View>
-                  <View style={styles.msgView}>
-                    <Text
+    <SafeAreaView>
+      <StatusBar backgroundColor={'lightblue'} />
+      <View style={styles.screen}>
+        <View style={styles.chatContainer}>
+          <ScrollView>
+            {messages?.map((item, index) => (
+              <View key={index}>
+                {groupId == item.groupId ? (
+                  <View style={styles.chatSubContainer}>
+                    <View style={styles.imgView}>
+                      <Image source={item.img} />
+                    </View>
+                    <View
                       style={[
-                        styles.userNameTxt,
-                        {
-                          color:
-                            colors[Math.floor(Math.random() * colors.length)],
-                        },
+                        styles.msgView,
+                        users.find(u => u._id == item.userId).name ==
+                        userInfo.name
+                          ? {marginLeft: '50%'}
+                          : {marginLeft: 0},
                       ]}>
-                      {item.userName}
-                    </Text>
-                    <Text style={styles.msgTxt}>{item.msg}</Text>
+                      <Text
+                        style={[
+                          styles.userNameTxt,
+                          users.find(u => u._id == item.userId).name ==
+                          userInfo.name
+                            ? {
+                                color: '#B64A1D',
+                              }
+                            : {color: '#D12C0D'},
+                        ]}>
+                        {users.find(u => u._id == item.userId).name}{' '}
+                        {users.find(u => u._id == item.userId).surname}
+                      </Text>
+                      <Text style={styles.msgTxt}>{item.message}</Text>
+                    </View>
                   </View>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
-
-          <View style={styles.inputContainer}>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.input}
-                placeholder="Mesaj girin..."
-                value={inputMsg}
-                onChangeText={inputMsg => setInputMsg(inputMsg)}
-              />
-            </View>
-            <TouchableOpacity onPress={sendMsg}>
-              <View style={styles.btnView}>
-                <Text style={styles.btnTxt}>Gönder</Text>
+                ) : (
+                  <></>
+                )}
               </View>
-            </TouchableOpacity>
-          </View>
+            ))}
+          </ScrollView>
         </View>
-      </KeyboardAwareScrollView>
-    </>
+
+        <View style={styles.inputContainer}>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.input}
+              placeholder="Mesaj girin..."
+              value={inputMsg}
+              onChangeText={inputMsg => setInputMsg(inputMsg)}
+            />
+          </View>
+          <TouchableOpacity onPress={sendMsg}>
+            <View style={styles.btnView}>
+              <Text style={styles.btnTxt}>Gönder</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          style={styles.backBtn}
+          onPress={() => navigation.pop()}>
+          <Text style={styles.backBtnTxt}>Back</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -147,7 +174,7 @@ export default Conversation;
 const styles = StyleSheet.create({
   screen: {},
   chatContainer: {
-    height: 500,
+    height: 300,
     backgroundColor: '#ECECEC',
     padding: 20,
     margin: 20,
@@ -202,4 +229,11 @@ const styles = StyleSheet.create({
     borderColor: 'lightgrey',
   },
   btnTxt: {},
+  backBtn: {
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  backBtnTxt: {
+    fontSize: 20,
+  },
 });
