@@ -18,7 +18,6 @@ const ChatMainScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const userToken = useSelector(state => state.app.userToken);
   const groups = useSelector(state => state.app.groups);
-  console.log('groups: ', groups);
 
   function getGroupList() {
     var config = {
@@ -61,7 +60,7 @@ const ChatMainScreen = ({navigation}) => {
                 <Image source={require('../assets/images/orangeCircle.png')} />
               </View>
               <View style={styles.msgView}>
-                <Text style={styles.msgTxt}>{item.groupName}</Text>
+                <Text style={styles.msgTxt}>{item.name}</Text>
               </View>
             </View>
           ))}

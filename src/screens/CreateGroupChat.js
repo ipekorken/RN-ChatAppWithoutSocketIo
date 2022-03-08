@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
-import {setSelectedUsers, setUsers} from '../@redux/app/actions';
+import {setSelectedUsers, setUsers, setGroups} from '../@redux/app/actions';
 import {apiUrl} from '../apis';
 import {GreenCheck, GreyCheck} from '../components';
 
@@ -45,7 +45,7 @@ const CreateGroup = ({navigation}) => {
   function createGroup() {
     if (name !== '') {
       var data = JSON.stringify({
-        groupName: name,
+        name: name,
         members: selectedUsers,
       });
       `${apiUrl}:3000/api/groups/addGroup`;
@@ -62,7 +62,27 @@ const CreateGroup = ({navigation}) => {
       axios(config)
         .then(function (response) {
           console.log(JSON.stringify(response.data));
+
+          var config = {
+            method: 'get',
+            url: `${apiUrl}:3000/api/groups`,
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+              'Content-Type': 'application/json',
+            },
+          };
+
+          axios(config)
+            .then(function (response) {
+              console.log(JSON.stringify(response.data));
+              dispatch(setGroups(response.data.data));
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+
           setTimeout(() => {
+            dispatch(setSelectedUsers([]));
             navigation.navigate('ChatMainScreen');
           }, 500);
         })
