@@ -10,7 +10,6 @@ import {
   Video,
   Conversation,
   ChatMainScreen,
-  CreateChat,
   CreateGroupChat,
 } from '../screens';
 
@@ -43,11 +42,6 @@ const Navigation = () => {
         <Stack.Screen
           name="Conversation"
           component={Conversation}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="CreateChat"
-          component={CreateChat}
           options={{headerShown: false}}
         />
         <Stack.Screen

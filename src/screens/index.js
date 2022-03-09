@@ -7,7 +7,6 @@ import Video from './Video';
 import Conversation from './Conversation';
 import ChatMainScreen from './ChatMainScreen';
 import CreateGroupChat from './CreateGroupChat';
-import CreateChat from './CreateChat';
 
 export {
   Home,
@@ -19,5 +18,4 @@ export {
   Conversation,
   ChatMainScreen,
   CreateGroupChat,
-  CreateChat,
 };

@@ -54,7 +54,6 @@ const ChatMainScreen = ({navigation}) => {
       groupId: id,
     });
   }
-
   return (
     <View style={styles.screen}>
       <StatusBar backgroundColor={'lightblue'} />

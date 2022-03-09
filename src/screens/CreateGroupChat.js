@@ -13,7 +13,12 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
-import {setSelectedUsers, setUsers, setGroups} from '../@redux/app/actions';
+import {
+  setSelectedUsers,
+  setUsers,
+  setGroups,
+  setUserInfo,
+} from '../@redux/app/actions';
 import {apiUrl} from '../apis';
 import {GreenCheck, GreyCheck} from '../components';
 
@@ -43,13 +48,34 @@ const CreateGroup = ({navigation}) => {
     ]);
   };
 
+  function doAdmin() {
+    var data = JSON.stringify({
+      isAdmin: true,
+    });
+    var config = {
+      method: 'patch',
+      url: `${apiUrl}:3000/api/users/update`,
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+    axios(config)
+      .then(function (response) {
+        dispatch(setUserInfo(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   function createGroup() {
     if (name !== '') {
       var data = JSON.stringify({
         name: name,
         members: selectedUsers,
       });
-      `${apiUrl}:3000/api/groups/addGroup`;
       var config = {
         method: 'post',
         url: `${apiUrl}:3000/api/groups/addGroup`,
@@ -63,6 +89,7 @@ const CreateGroup = ({navigation}) => {
       axios(config)
         .then(function (response) {
           //console.log(JSON.stringify(response.data));
+          doAdmin();
           var config = {
             method: 'get',
             url: `${apiUrl}:3000/api/groups`,
@@ -93,6 +120,7 @@ const CreateGroup = ({navigation}) => {
   }
 
   function goChatMainScreen() {
+    dispatch(setSelectedUsers([]));
     navigation.navigate('ChatMainScreen');
   }
 
