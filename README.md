@@ -1,1 +1,2 @@
-- Demo react native app with using twilio library for video call, call and chat.
+- A chat app without socket.io and gifted chat.
+- FirstAppApi used as server.
