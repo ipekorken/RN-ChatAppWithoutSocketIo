@@ -8,17 +8,14 @@ import {
   View,
   StatusBar,
   SafeAreaView,
-  FlatList,
-  Alert,
 } from 'react-native';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
 import {setUsers, setMessages} from '../@redux/app/actions';
 import {apiUrl} from '../apis';
 
 const Conversation = ({navigation, route}) => {
-  const flatListRef = useRef();
   const {groupId} = route.params;
   const dispatch = useDispatch();
   const userToken = useSelector(state => state.app.userToken);
@@ -29,15 +26,11 @@ const Conversation = ({navigation, route}) => {
 
   //getMessageList fonksiyonunu sürekli yeniliyor.
   useEffect(() => {
-    const interval = setInterval(getMessageList, 1000);
+    const interval = setInterval(getMessageList, 100);
     return () => {
       clearInterval(interval);
     };
   }, []);
-
-  const showAlert = (errTitle, errInfo) => {
-    Alert.alert(errTitle, errInfo, [{text: 'OK'}]);
-  };
 
   function sendMsg() {
     if (inputMsg !== '') {
@@ -119,50 +112,46 @@ const Conversation = ({navigation, route}) => {
       <StatusBar backgroundColor={'lightblue'} />
       <View style={styles.screen}>
         <View style={styles.chatContainer}>
-          <FlatList
-            data={messages}
-            keyExtractor={(item, index) => item._id}
-            ref={flatListRef}
-            renderItem={({item}) => {
-              return (
-                <View>
-                  {groupId == item.groupId ? (
-                    <View style={styles.chatSubContainer}>
-                      <View style={styles.imgView}>
-                        <Image source={item.img} />
-                      </View>
-                      <View
+          <ScrollView>
+            {messages?.map((item, index) => (
+              <View key={index}>
+                {groupId == item.groupId ? (
+                  <View style={styles.chatSubContainer}>
+                    <View style={styles.imgView}>
+                      <Image source={item.img} />
+                    </View>
+                    <View
+                      style={[
+                        styles.msgView,
+                        users.find(u => u._id == item.userId).name ==
+                        userInfo.name
+                          ? {marginLeft: '50%'}
+                          : {marginLeft: 0},
+                      ]}>
+                      <Text
                         style={[
-                          styles.msgView,
+                          styles.userNameTxt,
                           users.find(u => u._id == item.userId).name ==
                           userInfo.name
-                            ? {marginLeft: '50%'}
-                            : {marginLeft: 0},
+                            ? {
+                                color: '#B64A1D',
+                              }
+                            : {color: '#D12C0D'},
                         ]}>
-                        <Text
-                          style={[
-                            styles.userNameTxt,
-                            users.find(u => u._id == item.userId).name ==
-                            userInfo.name
-                              ? {
-                                  color: '#B64A1D',
-                                }
-                              : {color: '#D12C0D'},
-                          ]}>
-                          {users.find(u => u._id == item.userId).name}{' '}
-                          {users.find(u => u._id == item.userId).surname}
-                        </Text>
-                        <Text style={styles.msgTxt}>{item.message}</Text>
-                      </View>
+                        {users.find(u => u._id == item.userId).name}{' '}
+                        {users.find(u => u._id == item.userId).surname}
+                      </Text>
+                      <Text style={styles.msgTxt}>{item.message}</Text>
                     </View>
-                  ) : (
-                    <></>
-                  )}
-                </View>
-              );
-            }}
-          />
+                  </View>
+                ) : (
+                  <></>
+                )}
+              </View>
+            ))}
+          </ScrollView>
         </View>
+
         <View style={styles.inputContainer}>
           <View style={styles.inputView}>
             <TextInput
@@ -254,10 +243,5 @@ const styles = StyleSheet.create({
   },
   backBtnTxt: {
     fontSize: 20,
-  },
-  separator: {
-    width: '100%',
-    height: 1,
-    backgroundColor: 'lightgrey',
   },
 });
